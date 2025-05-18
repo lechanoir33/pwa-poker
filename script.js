@@ -11,7 +11,7 @@ function generateSessions(start, end) {
 
   while (date <= end) {
     const day = date.getDay();
-    if (day === 1 || day === 4) { // Lundi = 1, Jeudi = 4
+    if (day === 1 || day === 4) {
       sessions.push(new Date(date));
     }
     date.setDate(date.getDate() + 1);
@@ -20,8 +20,9 @@ function generateSessions(start, end) {
   return sessions;
 }
 
-function formatDate(date) {
-  return date.toISOString().slice(0, 10);
+// Format date à la française : "12/05/2025"
+function formatDateFr(date) {
+  return date.toLocaleDateString('fr-FR');
 }
 
 function createSessionElement(date) {
@@ -29,7 +30,7 @@ function createSessionElement(date) {
   sessionDiv.classList.add('session');
 
   const h2 = document.createElement('h2');
-  h2.textContent = formatDate(date);
+  h2.textContent = formatDateFr(date);
   sessionDiv.appendChild(h2);
 
   hands.forEach(hand => {
@@ -47,8 +48,8 @@ function createSessionElement(date) {
     for (let i = 0; i < 4; i++) {
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.id = `${formatDate(date)}_${hand}_${i}`;
-      checkbox.name = `${formatDate(date)}_${hand}`;
+      checkbox.id = `${formatDateFr(date)}_${hand}_${i}`;
+      checkbox.name = `${formatDateFr(date)}_${hand}`;
       checkboxesDiv.appendChild(checkbox);
     }
 
