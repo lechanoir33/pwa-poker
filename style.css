@@ -11,28 +11,31 @@ body {
   text-transform: uppercase;
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  color: #fff;
 }
 
 main {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  align-items: center;
 }
 
 .session {
   border-bottom: 1px solid #444;
   padding-bottom: 1rem;
+  width: 100%;
+  max-width: 400px;
 }
 
 .session h2 {
   font-size: 1rem;
   margin: 0 0 0.5rem;
-  color: #fff;
+  text-align: center;
 }
 
 .hand-row {
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 0.8rem;
 }
@@ -41,7 +44,7 @@ main {
   width: 50px;
   margin-right: 1rem;
   font-weight: bold;
-  color: #fff;
+  text-align: right;
 }
 
 .checkboxes {
@@ -52,7 +55,7 @@ main {
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  accent-color: white;
+  accent-color: black; /* coche noire */
   background-color: #000;
   border: 1px solid #fff;
 }
