@@ -1,73 +1,70 @@
-const premiums = ['TT', 'JJ', 'QQ', 'KK', 'AA'];
-const nbCases = 4;
 const sessionsContainer = document.getElementById('sessions');
 
-function getPastSessions(startDate, endDate) {
-  const dates = [];
-  const current = new Date(startDate);
-  while (current <= endDate) {
-    const day = current.getDay();
-    if (day === 1 || day === 4) { // Lundi (1) et Jeudi (4)
-      dates.push(new Date(current));
+const hands = ['TT', 'JJ', 'QQ', 'KK', 'AA'];
+const startDate = new Date('2025-05-12');
+const endDate = new Date('2025-11-12');
+
+// Génère tous les lundis et jeudis entre deux dates
+function generateSessions(start, end) {
+  const sessions = [];
+  let date = new Date(start);
+
+  while (date <= end) {
+    const day = date.getDay();
+    if (day === 1 || day === 4) { // Lundi = 1, Jeudi = 4
+      sessions.push(new Date(date));
     }
-    current.setDate(current.getDate() + 1);
+    date.setDate(date.getDate() + 1);
   }
-  return dates.reverse(); // Du plus récent au plus ancien
+
+  return sessions;
 }
 
 function formatDate(date) {
-  return date.toISOString().split('T')[0];
+  return date.toISOString().slice(0, 10);
 }
 
-function loadState(key) {
-  return localStorage.getItem(key) === '1';
-}
-
-function saveState(key, value) {
-  localStorage.setItem(key, value ? '1' : '0');
-}
-
-function createCheckbox(dateStr, hand, index) {
-  const id = `${dateStr}_${hand}_${index}`;
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = loadState(id);
-  checkbox.addEventListener('change', () => {
-    saveState(id, checkbox.checked);
-  });
-  return checkbox;
-}
-
-function createSession(date) {
-  const dateStr = formatDate(date);
+function createSessionElement(date) {
   const sessionDiv = document.createElement('div');
-  sessionDiv.className = 'session';
+  sessionDiv.classList.add('session');
 
-  const title = document.createElement('h2');
-  title.textContent = dateStr;
-  sessionDiv.appendChild(title);
+  const h2 = document.createElement('h2');
+  h2.textContent = formatDate(date);
+  sessionDiv.appendChild(h2);
 
-  premiums.forEach((hand) => {
+  hands.forEach(hand => {
     const row = document.createElement('div');
-    row.className = 'hand-row';
+    row.classList.add('hand-row');
 
     const label = document.createElement('div');
-    label.className = 'hand-label';
+    label.classList.add('hand-label');
     label.textContent = hand;
     row.appendChild(label);
 
-    for (let i = 0; i < nbCases; i++) {
-      row.appendChild(createCheckbox(dateStr, hand, i));
+    const checkboxesDiv = document.createElement('div');
+    checkboxesDiv.classList.add('checkboxes');
+
+    for (let i = 0; i < 4; i++) {
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = `${formatDate(date)}_${hand}_${i}`;
+      checkbox.name = `${formatDate(date)}_${hand}`;
+      checkboxesDiv.appendChild(checkbox);
     }
 
+    row.appendChild(checkboxesDiv);
     sessionDiv.appendChild(row);
   });
 
-  sessionsContainer.appendChild(sessionDiv);
+  return sessionDiv;
 }
 
-// Génère les sessions depuis début 2024 jusqu’à aujourd’hui
-const start = new Date('2024-01-01');
-const end = new Date();
-const sessions = getPastSessions(start, end);
-sessions.forEach(createSession);
+function init() {
+  const sessions = generateSessions(startDate, endDate);
+  sessionsContainer.innerHTML = '';
+  sessions.forEach(sessionDate => {
+    sessionsContainer.appendChild(createSessionElement(sessionDate));
+  });
+}
+
+init();
